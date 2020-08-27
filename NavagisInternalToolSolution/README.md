@@ -7,6 +7,8 @@ Please edit the setting at NavagisInternalTool\Models\Setting.cs and provide the
 
 Sample account format (this account was deleted):
 
-
+ClientId: 78906962687-m27mfuove777l04vlci9ilggn5p6h98d.apps.googleusercontent.com
+ClientSecret: alTloGokKXN6j14Zc9y1L_af
+BillingAccountName: billingAccounts/01CCBA-484432-BC33D7
 
 
