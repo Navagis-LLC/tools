@@ -11,4 +11,5 @@ ClientId: 78906962687-m27mfuove777l04vlci9ilggn5p6h98d.apps.googleusercontent.co
 ClientSecret: alTloGokKXN6j14Zc9y1L_af ;
 BillingAccountName: billingAccounts/01CCBA-484432-BC33D7 ;
 
-
+For more info:
+https://docs.google.com/document/d/1ZtD5AKIYopghHMlDYC5VTVoggB1lz9STQnaXBUzl58g/edit?usp=sharing
