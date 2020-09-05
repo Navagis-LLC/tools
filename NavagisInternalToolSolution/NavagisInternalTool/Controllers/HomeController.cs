@@ -13,6 +13,11 @@ namespace NavagisInternalTool.Controllers
             return View();
         }
 
+        public ActionResult Success()
+        {
+            return View();
+        }
+
         public async Task<ActionResult> Connect(CancellationToken cancellationToken)
         {
             var _authorizationCodeApp = await new AuthorizationCodeMvcApp(this, new AppFlowMetadata()).AuthorizeAsync(cancellationToken);

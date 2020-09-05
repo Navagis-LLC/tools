@@ -35,6 +35,7 @@ namespace NavagisInternalTool.Controllers
 
             var _cloudbillingService = _googleConnect.GetCloudbillingService();
             var project = "projects/"+ CategoryId;
+            bool isLinked = false; 
 
             try
             {
@@ -46,14 +47,22 @@ namespace NavagisInternalTool.Controllers
 
                 Data.ProjectBillingInfo response = updateBillingInfoRequest.Execute();
                 Session["ErrMessage"] = "";
+                isLinked = true;
             }
             catch (Exception)
             {
                 Session["ErrMessage"] = "There is a permission issue in linking the selected project to Navagis. Please conctact us.";
             }
             
-
-            return RedirectToAction("MyProjects", "GoogleProjects"); 
+            if(isLinked== true)
+            {
+                return RedirectToAction("Success", "Home");
+            }
+            else
+            {
+                return RedirectToAction("MyProjects", "GoogleProjects");
+            }
+             
         }
     }
 }
