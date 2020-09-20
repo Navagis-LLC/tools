@@ -15,45 +15,45 @@
                         <th>Project ID</th>
                         <th>Project Name</th>
                         <th>Project State</th>
-                        <!-- <th>Linked with Navagis</th> -->
+                        <th>Linked with Navagis</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var project in Model)
                     {
-                    <tr class="@project.TableTrClass">
-                        <td><input type="radio" name="CategoryId" value="@project.ProjectId" @project.TableRadioButton /></td>
-                        <td>@project.ProjectId</td>
-                        <td>@project.Name</td>
-                        <td>@project.LifecycleState</td>
-                        <!-- <td>@project.IsLinkedText</td> -->
-                    </tr>
-                        }
-                    </tbody>
-                </table>
-                <label style="font-weight:bold">Select a Project</label>
-                <label style="font-weight:normal"> (If you don't see the desired project, please log in with the Google account associated with the Project Owner)</label>
-                <div id="register-project">  <button type="button" value="Register Selected Project with Navagis" id="submitButton" onclick="return checkIfHasSelectedProject()">Register this Project with Navagis</button></div>
-            </div>
-                }
-
-        @if (Session["ErrMessage"] != null)
-        {
-            <div class="form-group">
-                <span class="text-danger">@Session["ErrMessage"]</span>
-            </div>
-            Session.Remove("Message");
-        }
-
-        <script language="JavaScript">
-            function checkIfHasSelectedProject() {
-                let radios = document.querySelectorAll('input[type="radio"]:checked');
-                let value = radios.length > 0 ? radios[0].value : null;
-                if (value == null) {
-                    alert("Please select a project to register with Navagis.");
-                    return false;
-                }
-                document.getElementById("_projectform").submit();
+                        <tr class="@project.TableTrClass">
+                            <td><input type="radio" name="projectName" value="@project.ProjectId" @project.TableRadioButton /></td>
+                            <td>@project.ProjectId</td>
+                            <td>@project.Name</td>
+                            <td>@project.LifecycleState</td>
+                            <td>@project.IsLinkedText</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <label style="font-weight:bold">Select a Project</label>
+            <label style="font-weight:normal"> (If you don't see the desired project, please log in with the Google account associated with the Project Owner)</label>
+            <div id="register-project">  <button type="button" value="Register Selected Project with Navagis" id="submitButton" onclick="return checkIfHasSelectedProject()">Register this Project with Navagis</button></div>
+        </div>
             }
-        </script>
-    </div>
+
+    @if (Session["ErrMessage"] != null)
+    {
+        <div class="form-group">
+            <span class="text-danger">@Session["ErrMessage"]</span>
+        </div>
+        Session.Remove("Message");
+    }
+
+    <script language="JavaScript">
+        function checkIfHasSelectedProject() {
+            let radios = document.querySelectorAll('input[type="radio"]:checked');
+            let value = radios.length > 0 ? radios[0].value : null;
+            if (value == null) {
+                alert("Please select a project to register with Navagis.");
+                return false;
+            }
+            document.getElementById("_projectform").submit();
+        }
+    </script>
+</div>

@@ -15,24 +15,22 @@ namespace NavagisInternalTool.Credentials
 {
     public class AppFlowMetadata : FlowMetadata
     {
-        /*
-         * Credential 
-         */
-        private static string _clientID = new Setting().ClientId;
-        private static string _clientSecret = new Setting().ClientSecret;
+        private static int _settingRecordID = Convert.ToInt32(WebConfigurationManager.AppSettings["DBDefaultSettingID"]);
+        private static Setting _setting = new ApplicationDBContext().Settings.SingleOrDefault(s => s.Id == _settingRecordID);
 
         private static readonly IAuthorizationCodeFlow flow =
             new GoogleAuthorizationCodeFlow(new GoogleAuthorizationCodeFlow.Initializer
             {
                 ClientSecrets = new ClientSecrets
                 {
-                    ClientId = _clientID,
-                    ClientSecret = _clientSecret
+                    ClientId = _setting.ClientId,
+                    ClientSecret = _setting.ClientSecret
                 },
                 Scopes = new[] 
                 {
-                    CloudResourceManagerService.Scope.CloudPlatformReadOnly,
-                    CloudResourceManagerService.Scope.CloudPlatform
+                    // CloudResourceManagerService.Scope.CloudPlatformReadOnly,
+                    CloudResourceManagerService.Scope.CloudPlatform,
+                    "email"
                 },
                 DataStore = new FileDataStore("NavagisInternalTool")
             });

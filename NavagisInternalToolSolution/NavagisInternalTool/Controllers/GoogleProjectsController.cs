@@ -19,24 +19,66 @@ namespace NavagisInternalTool.Controllers
 {
     public class GoogleProjectsController : Controller
     {
-        private string _billingAccountName;
+        private ApplicationDBContext db;
+        private int _settingRecordID;
+        
 
         public GoogleProjectsController()
         {
-            var _setting = new Setting();
-            _billingAccountName = _setting.BillingAccountName;
+            db = new ApplicationDBContext();
+            _settingRecordID = Convert.ToInt32(WebConfigurationManager.AppSettings["DBDefaultSettingID"]);
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            db.Dispose();
+        }
+
+        public ActionResult Testing()
+        {
+            return Content("this is a test.");
+        }
+
+        public ActionResult EmailNoBillingAccount(string email)
+        {
+            ViewBag.email = email; 
+            return View();
+        }
+        
 
         public async Task<ActionResult> MyProjects(CancellationToken cancellationToken)
         {
             var _googleConnect = new ConnectedServices(this, cancellationToken);
             var _isAutorize = await _googleConnect.Authorize();
 
-            if(_isAutorize==false)
+          
+            if (_isAutorize==false)
                 return RedirectToAction("Index", "Home");
+
+            // get user Email
+            var oauth2Service = _googleConnect.GetOauth2Service();
+            var userInfo = oauth2Service.Userinfo.Get().Execute();
+
+            Client client = db.Clients.SingleOrDefault(c => c.Email == userInfo.Email);
             
+            if (client==null)
+            {
+                // logout User - todo - below seems not working.
+                var AuthResult = _googleConnect.GetAuthResult();
+                AuthResult.Credential = null;
+                Session.Abandon();
+                //-------------------------//
+
+                // Inform the user - his email has no billing account assigned.
+                return RedirectToAction("EmailNoBillingAccount", "GoogleProjects", new { email = userInfo.Email });
+            }
+                
+            BillingAccount billingAccount = db.BillingAccounts.SingleOrDefault(b => b.Id == client.BillingAccountId);
+            var billingNumber = "billingAccounts/" + billingAccount.BillingAccountName;
+
+    
             var projects = RetriveProjects(_googleConnect);
-            var linkedProjects = RetriveProjectsInBilling(_googleConnect);
+            var linkedProjects = RetriveProjectsInBilling(_googleConnect, billingNumber);
 
             foreach(Project project in projects)
             {
@@ -88,16 +130,13 @@ namespace NavagisInternalTool.Controllers
             return projects;
         }
 
-        /**
-        * A user must have "Billing Viewer" role set in the console billing.  
-        */
-        private List<ProjectsInBilling> RetriveProjectsInBilling(ConnectedServices _googleConnect)
+        private List<ProjectsInBilling> RetriveProjectsInBilling(ConnectedServices _googleConnect, string billingNumber)
         {
             var linkedProjects = new List<ProjectsInBilling>();
             var service = _googleConnect.GetCloudbillingService();
 
             BillingAccountsResource.ProjectsResource.ListRequest
-                listRequest = service.BillingAccounts.Projects.List(_billingAccountName);
+            listRequest = service.BillingAccounts.Projects.List(billingNumber);
         
             DataCloudbilling.ListProjectBillingInfoResponse response;
 

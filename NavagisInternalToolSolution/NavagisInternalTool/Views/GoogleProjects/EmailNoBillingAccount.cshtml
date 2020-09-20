@@ -1,0 +1,27 @@
+﻿
+@{
+    ViewBag.Title = "EmailNoBillingAccount";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container login-container">
+    <br />
+    <div class="form-group">
+        <div id="index_info">
+            <h4>Important!</h4> <br />
+            <span><b>This email (@ViewBag.email) does not yet have a Billing Account assigned.<br /> Please consult Navagis or use another email.</b></span><br>
+            <span>If you have any concerns please don't hesitate to contact us.</span><br><br />
+
+        </div>
+    </div>
+</div>
+<style>
+    #index_info {
+        text-align: center
+    }
+
+    #index_info span {
+        color: #525f7f;
+    }
+</style>
+

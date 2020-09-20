@@ -3,17 +3,14 @@ using System.Threading;
 using Google.Apis.Auth.OAuth2.Mvc;
 using NavagisInternalTool.Credentials;
 using System.Threading.Tasks;
+using System.IO;
+using System.Reflection;
 
 namespace NavagisInternalTool.Controllers
 {
     public class HomeController : Controller
     {
         public ActionResult Index()
-        {
-            return View();
-        }
-
-        public ActionResult Success()
         {
             return View();
         }

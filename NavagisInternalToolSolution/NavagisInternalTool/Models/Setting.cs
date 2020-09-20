@@ -1,29 +1,26 @@
-﻿namespace NavagisInternalTool.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace NavagisInternalTool.Models
 {
     public class Setting
     {
-        public string ClientId
-        {
-            get
-            {
-                return "Please.Update.this.statement.with.proper.clientID.apps.googleusercontent.com";
-            }
-        }
+        public int Id { get; set; }
 
-        public string ClientSecret
-        {
-            get
-            {
-                return "Please.update.this.with.proper.clientScret";
-            }
-        }
+        [Required]
+        [StringLength(255)]
+        [Display(Name = "Client ID")]
+        public string ClientId { get; set; }
 
-        public string BillingAccountName
-        {
-            get
-            {
-                return "billingAccounts/{yourbilling.here}";
-            }
-        }
+        [Required]
+        [StringLength(255)]
+        [Display(Name = "Client Secret")]
+        public string ClientSecret { get; set; }
+
+        
+        [Required]
+        [StringLength(255)]
+        [Display(Name = "Service Account Email")]
+        public string ServiceAccountEmail { get; set; }
+
     }
 }
