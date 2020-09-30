@@ -1,0 +1,13 @@
+D:\Repo\spice-registration\RegisterProject-Spice
+--output-path=obj\Release\netcoreapp2.1\
+--application-name=RegisterProject-Spice
+--content-root=D:\Repo\spice-registration\RegisterProject-Spice
+--file=D:\Repo\spice-registration\RegisterProject-Spice\Pages\authorize.cshtml
+--file=D:\Repo\spice-registration\RegisterProject-Spice\Pages\Error.cshtml
+--file=D:\Repo\spice-registration\RegisterProject-Spice\Pages\Index.cshtml
+--file=D:\Repo\spice-registration\RegisterProject-Spice\Pages\Privacy.cshtml
+--file=D:\Repo\spice-registration\RegisterProject-Spice\Pages\Shared\_CookieConsentPartial.cshtml
+--file=D:\Repo\spice-registration\RegisterProject-Spice\Pages\Shared\_Layout.cshtml
+--file=D:\Repo\spice-registration\RegisterProject-Spice\Pages\Shared\_ValidationScriptsPartial.cshtml
+--file=D:\Repo\spice-registration\RegisterProject-Spice\Pages\_ViewImports.cshtml
+--file=D:\Repo\spice-registration\RegisterProject-Spice\Pages\_ViewStart.cshtml
