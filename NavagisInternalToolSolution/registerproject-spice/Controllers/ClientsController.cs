@@ -41,6 +41,7 @@ namespace RegisterProject_Spice.Controllers
         // POST: Clients/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        //[IgnoreAntiforgeryToken]
         public ActionResult Create(Client client)
         {
             if (ModelState.IsValid)
@@ -90,6 +91,7 @@ namespace RegisterProject_Spice.Controllers
         // POST: Clients/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        //[IgnoreAntiforgeryToken]
         public ActionResult Edit(Client client)
         {
             if (ModelState.IsValid)
@@ -126,6 +128,7 @@ namespace RegisterProject_Spice.Controllers
         // POST: Clients/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        //[IgnoreAntiforgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
             Client client = db.Clients.Find(id);

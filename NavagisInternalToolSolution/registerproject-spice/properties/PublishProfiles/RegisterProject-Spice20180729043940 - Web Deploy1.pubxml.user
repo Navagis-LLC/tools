@@ -7,5 +7,11 @@ by editing this MSBuild file. In order to learn more about this please visit htt
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
     <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAiP1b2F7kkEi7FzT8hIkU/QAAAAACAAAAAAAQZgAAAAEAACAAAAAVC1SiacChfgrsFe7oOIIGuuOg6ZjjjLHneB5Jwau2pQAAAAAOgAAAAAIAACAAAADM7BWHWakjqrE8jGhA5ilOXZ+n+tGKIZD+uP9jaCIkhIAAAABlcKfa15i2MbMzXmT0tPgyL+N7M2VSLxMN8QTCpgkrJ/l7MW49WbjXFuFxowo+jmsNEmFyd43fV6ot7mvj22BEjV8ER+AOzHPggwUg4ZhsfMarevDuWxnu69JaSio/6IjFHYE5/RUDmDExkHJndTPLgkaq/jeIxvGr086hqMdXfEAAAAByJQfloSaAhAjjbR9GiqciWfTNpwIDBMPwM56hzFKwKtlJ1RFK3yhDEWXO5zxBXFeIcOzUDT4aKPsQQ/LS5ZbT</EncryptedPassword>
+    <_PublishTargetUrl>C:\Users\User\Desktop\publish</_PublishTargetUrl>
   </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="NavagisProjectBillingDBConnection">
+      <Value>Data Source=ProjectRegistration.db</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
 </Project>

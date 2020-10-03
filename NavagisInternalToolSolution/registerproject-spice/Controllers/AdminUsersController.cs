@@ -10,7 +10,7 @@ using RegisterProject_Spice.Utilities;
 namespace RegisterProject_Spice.Controllers
 {
     [AdminRequiresAuthentication]
-    //[SuperAdminRoleAuthentications]
+    [SuperAdminRoleAuthentications]
     public class AdminUsersController : Controller
     {
         private ApplicationDbContext db;
@@ -54,6 +54,7 @@ namespace RegisterProject_Spice.Controllers
         // POST: AdminUsers/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        //[IgnoreAntiforgeryToken]
         public ActionResult Create(AdminUser adminUser)
         {
             var _userInDb = db.AdminUsers.SingleOrDefault(u => u.Username == adminUser.Username);
@@ -90,6 +91,7 @@ namespace RegisterProject_Spice.Controllers
         // POST: AdminUsers/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        //[IgnoreAntiforgeryToken]
         public ActionResult Edit(AdminUser adminUser)
         {
             if (ModelState.IsValid)
@@ -129,6 +131,7 @@ namespace RegisterProject_Spice.Controllers
         // POST: AdminUsers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        //[IgnoreAntiforgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
             AdminUser adminUser = db.AdminUsers.Find(id);

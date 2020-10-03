@@ -10,7 +10,10 @@ $(document).ready(function () {
                 __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
             },
             function (data) {
-                window.location.replace(data);
+                console.log(data);
+                //window.location.replace(data);
+                data = data.replace(/['"]+/g, '');
+                window.location.href = data;
             }
         );
     });
@@ -43,6 +46,8 @@ $(document).ready(function () {
                 __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
             },
             function (data) {
+                data = data.replace(/['"]+/g, '');
+                
                 const cardErrors = document.getElementById('card-errors');
                 if (data == "BAI_ERROR") {
                     cardErrors.textContent = "No BAI Specified. Please consult Navagis or use another email.";
@@ -50,6 +55,9 @@ $(document).ready(function () {
                 }
                 else if (data == "BAI_PERMISSION_ERROR") {
                     window.location.href = "/CustomMessages/Error";
+                }
+                else if (data == "BAI_NEED_TO_BE_CONFIGURED") {
+                    window.location.href = "/CustomMessages/ErrorBAI";
                 }
                 else {
                     window.location.href = "/CustomMessages/Success";

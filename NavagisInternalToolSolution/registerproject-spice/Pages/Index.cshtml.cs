@@ -65,25 +65,19 @@ namespace RegisterProject_Spice.Pages
         protected static string serviceAccount { get; set; }
         protected static string clientID { get; set; }
         protected static string clientSecret { get; set; }
-
-        // localhost
-        // protected static string redirect_uri = "https://localhost:44362/";
-
-        // App Engine
-        protected const string redirect_uri = "https://project-auth-211619.appspot.com";
-
-        // Azure
-        // protected const string redirect_uri = "http://registerproject-spice20180729043940.azurewebsites.net";
-
+        protected static string redirect_uri { get; set; }
+        public bool hasBaiInDb { get; set; }
+        public string emailFromOauth2 { get; set; }
 
         private ApplicationDbContext db;
 
         public IndexModel(IConfiguration configuration, ApplicationDbContext context)
         {
             Configuration = configuration;
-            serviceAccount = Configuration["Authentication:Google:ClientEmail"];
-            clientID = Configuration["Authentication:Google:ClientId"];
-            clientSecret = Configuration["Authentication:Google:ClientSecret"];
+            serviceAccount = Configuration["AuthenticationGoogleClientEmail"];
+            clientID = Configuration["AuthenticationGoogleClientId"];
+            clientSecret = Configuration["AuthenticationGoogleClientSecret"];
+            redirect_uri = Configuration["AppRedirectURL"];
             db = context;
         }
 
@@ -94,13 +88,7 @@ namespace RegisterProject_Spice.Pages
             Projects = new List<Data.Project>();
             isDisabled = "";
             projectDisplayVisibility = "hidden";
-
-            /*if (BAI != null)
-                HttpContext.Session.SetString("BAI", BAI);
-
-            if (HttpContext.Session.GetString("BAI") != null)
-                variables = HttpContext.Session.GetString("BAI");*/
-
+            hasBaiInDb = false;
             if (Code != null)
             {
                 // Retrieve Token and set to Session
@@ -110,16 +98,19 @@ namespace RegisterProject_Spice.Pages
                 var code2 =   this.HttpContext.Session.GetString("Token");
 
                 // Get Email Address
-                var Email = GetEmail(code2);
-                Client client = db.Clients.SingleOrDefault(c => c.Email == Email);
+                emailFromOauth2 = GetEmail(code2);
+                HttpContext.Session.SetString("emailFromOauth2", emailFromOauth2);
+                Client client = db.Clients.SingleOrDefault(c => c.Email == emailFromOauth2);
                 if (client != null)
                 {
-                    BillingAccount billingAccount = db.BillingAccounts.SingleOrDefault(b => b.Id == client.BillingAccountId);
+                    //BillingAccount billingAccount = db.BillingAccounts.SingleOrDefault(b => b.Id == client.BillingAccountId);
+                    BillingAccount billingAccount = db.BillingAccounts.Single(b=>b.Id==client.BillingAccountId);
                     if (billingAccount != null)
                     {
                         BAI = billingAccount.BillingAccountName;
                         HttpContext.Session.SetString("BAI", BAI);
                         variables = HttpContext.Session.GetString("BAI");
+                        hasBaiInDb = true;
                     }
                 }
                 
@@ -140,10 +131,6 @@ namespace RegisterProject_Spice.Pages
                 projectDisplayVisibility = "visible";
                 Projects = response.Projects.ToList<Data.Project>();
             }
-
-            // TODO: Specify Error if no BAI given
-            // TODO: Check to see if BAI given is under the navagis master account, if it's not, give an error
-            // TODO: Check to see if BAI given has the serviceAccount as a billing.admin - if not, give an error
         }
 
         private string GetEmail(string token)
@@ -260,6 +247,39 @@ namespace RegisterProject_Spice.Pages
             BillingData.Policy iamResponseSet = iamRequestSet.Execute();
         }
 
+        public bool isServiceAccountAdmin(string resource, string role, string member)
+        {
+
+            CloudbillingService cloudbillingService = new CloudbillingService(new BaseClientService.Initializer
+            {
+                HttpClientInitializer = GetGoogleCredential(),
+                ApplicationName = "Google-CloudResourceManagerSample/0.1",
+            });
+
+            BillingAccountsResource.GetIamPolicyRequest getIamRequest = cloudbillingService.BillingAccounts.GetIamPolicy(resource);
+            BillingData.Policy policyResponse = getIamRequest.Execute();
+            IList<BillingData.Binding> bindings = policyResponse.Bindings;
+
+            // Check if the bindings has the role specified already
+            bool has = bindings.Any(binding => binding.Role == role);
+            if (has)
+            {
+                // Get the first binding that has the specified role and add the member to it
+                var binding = bindings.First(tempBinding => tempBinding.Role == role);
+
+                if (!binding.Members.Contains(member))
+                    return false; // EXIT - can't find the member
+                else  
+                    return true;
+
+            }
+            else // no binding exists for this role type
+            {
+                return false; // EXIT no binding for this member exists
+            }
+           
+        }
+
         public void removeNewBillingIam(string resource, string role, string member)
         {
 
@@ -347,13 +367,14 @@ namespace RegisterProject_Spice.Pages
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        //[IgnoreAntiforgeryToken]
         public async Task<IActionResult> OnPostChangeBillingAsync(string Resource)
         {
 
             if (HttpContext.Session.GetString("BAI") == null)
                 return new JsonResult("BAI_ERROR");
   
-                string Bai = HttpContext.Session.GetString("BAI");
+            string Bai = HttpContext.Session.GetString("BAI");
 
             // Get the credentials from the current logged in user, i assume they are already logged in, but get again anyway
             CloudResourceManagerService cloudResourceManagerService = new CloudResourceManagerService(new BaseClientService.Initializer
@@ -366,30 +387,40 @@ namespace RegisterProject_Spice.Pages
 
             try
             {
-                // Add the serviceAccount as Owner to the Chosen Billing Account
-                CreateNewProjectIam(Resource, cloudResourceManagerService, "roles/owner", "serviceAccount:" + serviceAccount);
+                bool isAdmin = isServiceAccountAdmin(billingAccountName, "roles/billing.admin", "serviceAccount:" + serviceAccount);
 
-                // Add nav-cloud-support group as Editor
-                CreateNewProjectIam(Resource, cloudResourceManagerService, "roles/editor", "group:" + "nav-cloud-support@navagis.com");
+                if (isAdmin == true)
+                {
+                    // Add the serviceAccount as Owner to the Chosen Billing Account
+                    CreateNewProjectIam(Resource, cloudResourceManagerService, "roles/owner", "serviceAccount:" + serviceAccount);
 
-                // Add nav-cloud-support as Iam Admin
-                CreateNewProjectIam(Resource, cloudResourceManagerService, "roles/resourcemanager.projectIamAdmin", "group:" + "nav-cloud-support@navagis.com");
+                    // Add nav-cloud-support group as Editor
+                    CreateNewProjectIam(Resource, cloudResourceManagerService, "roles/editor", "group:" + "nav-cloud-support@navagis.com");
 
-                // Add nav-cloud-viewer as viewers
-                CreateNewProjectIam(Resource, cloudResourceManagerService, "roles/viewer", "group:" + "nav-cloud-viewer@navagis.com");
+                    // Add nav-cloud-support as Iam Admin
+                    CreateNewProjectIam(Resource, cloudResourceManagerService, "roles/resourcemanager.projectIamAdmin", "group:" + "nav-cloud-support@navagis.com");
 
-                // Move the Billing Account to the Given Navagis SubAccount in the BAI URL
-                ChangeBillingAccount(billingAccountName, Resource);
+                    // Add nav-cloud-viewer as viewers
+                    CreateNewProjectIam(Resource, cloudResourceManagerService, "roles/viewer", "group:" + "nav-cloud-viewer@navagis.com");
 
-                //TODO: Before we clean up, make sure the Project was correctly moved to the right billingAccount
-                //Cleanup the Billing User Accounts
-                CreateNewBillingIam(billingAccountName, "roles/billing.admin", "user:david@navagis.com");
-                CreateNewBillingIam(billingAccountName, "roles/billing.admin", "group:billing@navagis.com");
-                removeNewBillingIam(billingAccountName, "roles/billing.admin", "serviceAccount:" + serviceAccount);
+                    // Move the Billing Account to the Given Navagis SubAccount in the BAI URL
+                    ChangeBillingAccount(billingAccountName, Resource);
 
-                Projects = new List<Data.Project>();
+                    //TODO: Before we clean up, make sure the Project was correctly moved to the right billingAccount
+                    //Cleanup the Billing User Accounts
+                    CreateNewBillingIam(billingAccountName, "roles/billing.admin", "user:david@navagis.com");
+                    CreateNewBillingIam(billingAccountName, "roles/billing.admin", "group:billing@navagis.com");
+                    removeNewBillingIam(billingAccountName, "roles/billing.admin", "serviceAccount:" + serviceAccount);
 
-                return new JsonResult(JsonConvert.SerializeObject(Projects));
+                    Projects = new List<Data.Project>();
+
+                    return new JsonResult(JsonConvert.SerializeObject(Projects));
+                }
+                else
+                {
+                    return new JsonResult("BAI_NEED_TO_BE_CONFIGURED");
+                }
+                
             }
             catch (Exception)
             {
@@ -424,6 +455,7 @@ namespace RegisterProject_Spice.Pages
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        //[IgnoreAntiforgeryToken]
         public async Task<IActionResult> OnPostAuthGoogleAsync(string Name)
         {
             return await getGoogleRedirectUri();
@@ -431,6 +463,7 @@ namespace RegisterProject_Spice.Pages
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        //[IgnoreAntiforgeryToken]
         public async Task<IActionResult> OnPostPopulateProjectsAsync(string Name)
         {
             CloudResourceManagerService cloudResourceManagerService = new CloudResourceManagerService(new BaseClientService.Initializer

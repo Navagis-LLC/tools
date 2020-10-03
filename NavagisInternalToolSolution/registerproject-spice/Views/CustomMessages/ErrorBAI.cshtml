@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewData["Title"] = "ErrorBAI";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+@{ 
+    var email = ViewData["emailFromOauth2"];
+}
+
+<div class="container login-container">
+    <br />
+    <div class="form-group">
+        <div id="index_info">
+            <h4>Very sorry for your inconvenience.</h4> <br />
+            <span>
+                <b>
+                    This email (@email) address<br />
+                    has not yet been configured with the admin 
+                    of this app to Google Console Billing.
+                    <br /><br />
+                    Please contact us.
+                </b>
+            </span><br>
+        </div>
+    </div>
+</div>
+

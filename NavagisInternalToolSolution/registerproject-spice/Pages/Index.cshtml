@@ -3,6 +3,8 @@
 @{
     ViewData["Title"] = "Home page";
     var isInit = Model.Code == null ? true : false;
+    var hasBaiInDb = Model.hasBaiInDb;
+    var disabled = hasBaiInDb == true ? "" : "disabled";
 }
 
 @if (isInit == true)
@@ -13,7 +15,7 @@
                 <h4>Register Maps Project - Navagis Maps</h4> <br />
                 <span><b>Login using the Google Account Owner for your Maps Project</b></span><br>
                 <span>(See your official registration email for the email address associated with your Maps API License).</span><br><br />
-                <img src="~/images/signinwithgoogle.PNG"  id="ButtonGoogle" style="cursor: pointer;"/>
+                <img src="~/images/signinwithgoogle.PNG" id="ButtonGoogle" style="cursor: pointer;" />
                 <!--
                     <button type="submit" style="width:180px;margin-top:20px;visibility: hidden" class="btn btn-default" id="ButtonGoogle" name="provider" value="Google" title="Log in using your Google account" @Model.isDisabled>Login with Google</button>
                 -->
@@ -23,52 +25,77 @@
 }
 else
 {
-    <div class="container">
-        <div class="btn-group navbar-right" style="margin-top:7px">
-            <div style="margin-top:10px;margin-right:150px;"><b style="color:black">BAI</b> : <b style="color:#a62916;">@Model.variables</b></div>
-        </div>
-        <div class="table-border-with-shadow">
-            <table class="table table-hover">
-                <thead>
-                    <tr class="table-bordered">
-                        <th>  </th>
-                        <th>Project ID</th>
-                        <th>Project Name</th>
-                        <th>Project State</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var project in Model.Projects)
-                    {
-                        <tr>
-                            <td>
-                                <input type="radio" name="CategoryId" value=@project.ProjectId /><br />
-                            </td>
-                            <td>
-                                @project.ProjectId
-                            </td>
-                            <td>
-                                @project.Name
-                            </td>
-                            <td>
-                                @project.LifecycleState
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-            <label style="font-weight:bold">Select a Project</label>
-            <label style="font-weight:normal"> (If you don't see the desired project, please log in with the Google account associated with the Project Owner)</label>
-            <div id="register-project">
-                <button type="submit" value="Register Selected Project with Navagis" id="submitButton">
-                    <i class="loading-icon fa fa-spinner fa-spin hide"></i>
-                    <span class="btn-txt">Register this Project with Navagis</span>
-                </button>
+    @if (hasBaiInDb == true)
+    {
+        <div class="container">
+            <div class="btn-group navbar-right" style="margin-top:7px">
+                <div style="margin-top:10px;margin-right:150px;">
+                    <b style="color:black">Email</b>: <b style="color:#a62916;">@Model.emailFromOauth2</b>
+                    <b style="color:black">BAI</b>: <b style="color:#a62916;">@Model.variables</b>
+                </div>
             </div>
-            <span id="card-errors" style="color:brown"></span>
+            <div class="table-border-with-shadow">
+                <table class="table table-hover">
+                    <thead>
+                        <tr class="table-bordered">
+                            <th>  </th>
+                            <th>Project ID</th>
+                            <th>Project Name</th>
+                            <th>Project State</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var project in Model.Projects)
+                        {
+                            <tr>
+                                <td>
+                                    <input type="radio" name="CategoryId" value=@project.ProjectId @disabled /><br />
+                                </td>
+                                <td>
+                                    @project.ProjectId
+                                </td>
+                                <td>
+                                    @project.Name
+                                </td>
+                                <td>
+                                    @project.LifecycleState
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <label style="font-weight:bold">Select a Project</label>
+                <label style="font-weight:normal"> (If you don't see the desired project, please log in with the Google account associated with the Project Owner)</label>
+                <div id="register-project">
+                    <button type="submit" value="Register Selected Project with Navagis" id="submitButton">
+                        <i class="loading-icon fa fa-spinner fa-spin hide"></i>
+                        <span class="btn-txt">Register this Project with Navagis</span>
+                    </button>
+                </div>
+                <span id="card-errors" style="color:brown"></span>
+            </div>
+
         </div>
-        
-    </div>
+    }
+    else
+    {
+        <div class="container login-container">
+            <br />
+            <div class="form-group">
+                <div id="index_info">
+                    <h4>Important!</h4> <br />
+                    <span>
+                        <b>
+                            This email (@Model.emailFromOauth2) address<br /> 
+                            has not yet been registered with the admin of this app. 
+                            <br /><br />
+                            Please contact us.
+                        </b>
+                    </span><br>
+                </div>
+            </div>
+        </div>
+    }
 }
 
 

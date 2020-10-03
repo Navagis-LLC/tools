@@ -17,7 +17,6 @@ namespace RegisterProject_Spice.Controllers
         public BillingAccountsController(ApplicationDbContext context)
         {
             db = context;
-
         }
 
         protected override void Dispose(bool disposing)
@@ -38,6 +37,7 @@ namespace RegisterProject_Spice.Controllers
         // POST: BillingAccounts/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        //[IgnoreAntiforgeryToken]
         public ActionResult Create(BillingAccount billingAccount)
         {
             if (ModelState.IsValid)
@@ -68,6 +68,7 @@ namespace RegisterProject_Spice.Controllers
         // POST: BillingAccounts/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        //[IgnoreAntiforgeryToken]
         public ActionResult Edit(BillingAccount billingAccount)
         {
             if (ModelState.IsValid)
@@ -114,6 +115,7 @@ namespace RegisterProject_Spice.Controllers
         // POST: BillingAccounts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        //[IgnoreAntiforgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
             BillingAccount billingAccount = db.BillingAccounts.Find(id);

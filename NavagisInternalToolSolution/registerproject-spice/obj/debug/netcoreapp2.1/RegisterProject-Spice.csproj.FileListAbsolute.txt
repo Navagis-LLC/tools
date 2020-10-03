@@ -41,3 +41,15 @@ C:\Users\david\Dropbox\repos\Repos\RegisterProject-Spice\RegisterProject-Spice\o
 C:\Users\david\Dropbox\repos\Repos\RegisterProject-Spice\RegisterProject-Spice\obj\Debug\netcoreapp2.1\UserSecretsAssemblyInfo.cs
 C:\Users\david\Dropbox\repos\Repos\RegisterProject-Spice\RegisterProject-Spice\obj\Debug\netcoreapp2.1\RegisterProject-Spice.AssemblyInfoInputs.cache
 C:\Users\david\Dropbox\repos\Repos\RegisterProject-Spice\RegisterProject-Spice\obj\Debug\netcoreapp2.1\RegisterProject-Spice.csprojAssemblyReference.cache
+C:\Users\User\Desktop\InternalToolDev\RegisterProject-Spice\bin\Debug\netcoreapp2.1\RegisterProject-Spice.deps.json
+C:\Users\User\Desktop\InternalToolDev\RegisterProject-Spice\bin\Debug\netcoreapp2.1\RegisterProject-Spice.runtimeconfig.json
+C:\Users\User\Desktop\InternalToolDev\RegisterProject-Spice\bin\Debug\netcoreapp2.1\RegisterProject-Spice.runtimeconfig.dev.json
+C:\Users\User\Desktop\InternalToolDev\RegisterProject-Spice\bin\Debug\netcoreapp2.1\RegisterProject-Spice.dll
+C:\Users\User\Desktop\InternalToolDev\RegisterProject-Spice\bin\Debug\netcoreapp2.1\RegisterProject-Spice.pdb
+C:\Users\User\Desktop\InternalToolDev\RegisterProject-Spice\obj\Debug\netcoreapp2.1\RegisterProject-Spice.csprojAssemblyReference.cache
+C:\Users\User\Desktop\InternalToolDev\RegisterProject-Spice\obj\Debug\netcoreapp2.1\RegisterProject-Spice.csproj.CoreCompileInputs.cache
+C:\Users\User\Desktop\InternalToolDev\RegisterProject-Spice\obj\Debug\netcoreapp2.1\UserSecretsAssemblyInfo.cs
+C:\Users\User\Desktop\InternalToolDev\RegisterProject-Spice\obj\Debug\netcoreapp2.1\RegisterProject-Spice.AssemblyInfoInputs.cache
+C:\Users\User\Desktop\InternalToolDev\RegisterProject-Spice\obj\Debug\netcoreapp2.1\RegisterProject-Spice.AssemblyInfo.cs
+C:\Users\User\Desktop\InternalToolDev\RegisterProject-Spice\obj\Debug\netcoreapp2.1\RegisterProject-Spice.dll
+C:\Users\User\Desktop\InternalToolDev\RegisterProject-Spice\obj\Debug\netcoreapp2.1\RegisterProject-Spice.pdb

@@ -1,2 +1,16 @@
 runtime: aspnetcore
 env: flex
+
+env_variables:
+  AuthenticationGoogleClientEmail: [please replace this with service account client Email]
+  AuthenticationGoogleClientId: [Please replace this with (OAuth2) Client Id]
+  AuthenticationGoogleClientSecret: [Please replace this with (OAuth2) Client Secret]
+  AppRedirectURL: [Please replace this with valid redirect URL set from OAuth2 configuration]
+ 
+
+manual_scaling:
+  instances: 1
+
+resources:
+  cpu: 1
+  memory_gb: 2

@@ -41,6 +41,7 @@ namespace RegisterProject_Spice.Pages.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        //[IgnoreAntiforgeryToken]
         public ActionResult Login(AdminUser user)
         {
             if (!ModelState.IsValid)
@@ -85,6 +86,7 @@ namespace RegisterProject_Spice.Pages.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        //[IgnoreAntiforgeryToken]
         [AdminRequiresAuthentication]
         public ActionResult Edit(AdminUser adminUser)
         {

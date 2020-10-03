@@ -28,5 +28,11 @@ namespace RegisterProject_Spice.Controllers
         {
             return View();
         }
+
+        public IActionResult ErrorBAI()
+        {
+            ViewData["emailFromOauth2"] = HttpContext.Session.GetString("emailFromOauth2");
+            return View();
+        }
     }
 }

@@ -13442,11 +13442,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\User\\Desktop\\toedit\\RegisterProject-Spice\\RegisterProject-Spice.csproj",
+      "projectUniqueName": "D:\\Repo\\tools\\NavagisInternalToolSolution\\RegisterProject-Spice\\RegisterProject-Spice.csproj",
       "projectName": "RegisterProject-Spice",
-      "projectPath": "C:\\Users\\User\\Desktop\\toedit\\RegisterProject-Spice\\RegisterProject-Spice.csproj",
+      "projectPath": "D:\\Repo\\tools\\NavagisInternalToolSolution\\RegisterProject-Spice\\RegisterProject-Spice.csproj",
       "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\User\\Desktop\\toedit\\RegisterProject-Spice\\obj\\",
+      "outputPath": "D:\\Repo\\tools\\NavagisInternalToolSolution\\RegisterProject-Spice\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

@@ -75,7 +75,6 @@ namespace RegisterProject_Spice
             //    googleOptions.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
             //});
 
-
             services.AddSession();
             services.AddMemoryCache();
             services.AddMvc();
@@ -85,6 +84,13 @@ namespace RegisterProject_Spice
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            // run migration.. - create database if database does not exist..
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
+                context.Database.Migrate();
+            }
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -92,12 +98,33 @@ namespace RegisterProject_Spice
             else
             {
                 app.UseStatusCodePagesWithRedirects("/404.html");
-                app.UseExceptionHandler("CustomMessages/SystemError");
-                app.UseHsts();                
+                app.UseExceptionHandler("/CustomMessages/SystemError");
+                app.UseHsts();
             }
 
-           // app.UseHttpsRedirection();
-           
+            // app.UseHttpsRedirection();
+            app.Use(async (context, next) =>
+            {
+                context.Response.Headers.Add("X-Xss-Protection", "1");
+                context.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
+                context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+                context.Response.Headers.Add("Referrer-Policy", "origin");
+                context.Response.Headers.Add("Content-Type", "text/html; charset=utf-8");
+                context.Response.Headers.Add(
+                    "Content-Security-Policy-Report-Only",
+                    "default-src 'self'; " +
+                    "script-src-elem 'self'" +
+                    "style-src-elem 'self'; " +
+                    "img-src 'self'; http://www.w3.org/" +
+                    "font-src 'self'" +
+                    "media-src 'self'" +
+                    "frame-src 'self'" +
+                    "connect-src "
+                );
+                await next();
+            });
+
+
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseSession();
