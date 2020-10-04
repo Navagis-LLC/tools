@@ -247,39 +247,6 @@ namespace RegisterProject_Spice.Pages
             BillingData.Policy iamResponseSet = iamRequestSet.Execute();
         }
 
-        public bool isServiceAccountAdmin(string resource, string role, string member)
-        {
-
-            CloudbillingService cloudbillingService = new CloudbillingService(new BaseClientService.Initializer
-            {
-                HttpClientInitializer = GetGoogleCredential(),
-                ApplicationName = "Google-CloudResourceManagerSample/0.1",
-            });
-
-            BillingAccountsResource.GetIamPolicyRequest getIamRequest = cloudbillingService.BillingAccounts.GetIamPolicy(resource);
-            BillingData.Policy policyResponse = getIamRequest.Execute();
-            IList<BillingData.Binding> bindings = policyResponse.Bindings;
-
-            // Check if the bindings has the role specified already
-            bool has = bindings.Any(binding => binding.Role == role);
-            if (has)
-            {
-                // Get the first binding that has the specified role and add the member to it
-                var binding = bindings.First(tempBinding => tempBinding.Role == role);
-
-                if (!binding.Members.Contains(member))
-                    return false; // EXIT - can't find the member
-                else  
-                    return true;
-
-            }
-            else // no binding exists for this role type
-            {
-                return false; // EXIT no binding for this member exists
-            }
-           
-        }
-
         public void removeNewBillingIam(string resource, string role, string member)
         {
 
@@ -387,40 +354,32 @@ namespace RegisterProject_Spice.Pages
 
             try
             {
-                bool isAdmin = isServiceAccountAdmin(billingAccountName, "roles/billing.admin", "serviceAccount:" + serviceAccount);
 
-                if (isAdmin == true)
-                {
-                    // Add the serviceAccount as Owner to the Chosen Billing Account
-                    CreateNewProjectIam(Resource, cloudResourceManagerService, "roles/owner", "serviceAccount:" + serviceAccount);
+                // Add the serviceAccount as Owner to the Chosen Billing Account
+                CreateNewProjectIam(Resource, cloudResourceManagerService, "roles/owner", "serviceAccount:" + serviceAccount);
 
-                    // Add nav-cloud-support group as Editor
-                    CreateNewProjectIam(Resource, cloudResourceManagerService, "roles/editor", "group:" + "nav-cloud-support@navagis.com");
+                // Add nav-cloud-support group as Editor
+                CreateNewProjectIam(Resource, cloudResourceManagerService, "roles/editor", "group:" + "nav-cloud-support@navagis.com");
 
-                    // Add nav-cloud-support as Iam Admin
-                    CreateNewProjectIam(Resource, cloudResourceManagerService, "roles/resourcemanager.projectIamAdmin", "group:" + "nav-cloud-support@navagis.com");
+                // Add nav-cloud-support as Iam Admin
+                CreateNewProjectIam(Resource, cloudResourceManagerService, "roles/resourcemanager.projectIamAdmin", "group:" + "nav-cloud-support@navagis.com");
 
-                    // Add nav-cloud-viewer as viewers
-                    CreateNewProjectIam(Resource, cloudResourceManagerService, "roles/viewer", "group:" + "nav-cloud-viewer@navagis.com");
+                // Add nav-cloud-viewer as viewers
+                CreateNewProjectIam(Resource, cloudResourceManagerService, "roles/viewer", "group:" + "nav-cloud-viewer@navagis.com");
 
-                    // Move the Billing Account to the Given Navagis SubAccount in the BAI URL
-                    ChangeBillingAccount(billingAccountName, Resource);
+                // Move the Billing Account to the Given Navagis SubAccount in the BAI URL
+                ChangeBillingAccount(billingAccountName, Resource);
 
-                    //TODO: Before we clean up, make sure the Project was correctly moved to the right billingAccount
-                    //Cleanup the Billing User Accounts
-                    CreateNewBillingIam(billingAccountName, "roles/billing.admin", "user:david@navagis.com");
-                    CreateNewBillingIam(billingAccountName, "roles/billing.admin", "group:billing@navagis.com");
-                    removeNewBillingIam(billingAccountName, "roles/billing.admin", "serviceAccount:" + serviceAccount);
+                //TODO: Before we clean up, make sure the Project was correctly moved to the right billingAccount
+                //Cleanup the Billing User Accounts
+                CreateNewBillingIam(billingAccountName, "roles/billing.admin", "user:david@navagis.com");
+                CreateNewBillingIam(billingAccountName, "roles/billing.admin", "group:billing@navagis.com");
+                removeNewBillingIam(billingAccountName, "roles/billing.admin", "serviceAccount:" + serviceAccount);
 
-                    Projects = new List<Data.Project>();
+                Projects = new List<Data.Project>();
 
-                    return new JsonResult(JsonConvert.SerializeObject(Projects));
-                }
-                else
-                {
-                    return new JsonResult("BAI_NEED_TO_BE_CONFIGURED");
-                }
-                
+                return new JsonResult(JsonConvert.SerializeObject(Projects));
+
             }
             catch (Exception)
             {
